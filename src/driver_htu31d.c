@@ -61,6 +61,19 @@
 #define HTU31D_COMMAND_READ_DIAGNOSTIC         (1 << 3)          /**< read diagnostic command */
 
 /**
+ * @brief helper macros
+ */
+#ifdef DRIVER_DEBUG_PRINT
+#error DRIVER_DEBUG_PRINT is already defined
+#endif
+
+#ifdef DRIVER_HTU31D_WITH_DEBUG_PRINT
+#define DRIVER_DEBUG_PRINT(FMT) handle->debug_print(FMT, ##__VA_ARGS__)
+#else
+#define DRIVER_DEBUG_PRINT(FMT) ((void)0)
+#endif
+
+/**
  * @brief     write bytes
  * @param[in] *handle pointer to an htu31d handle structure
  * @param[in] reg iic register address
@@ -229,7 +242,7 @@ uint8_t htu31d_soft_reset(htu31d_handle_t *handle)
     res = a_htu31d_write(handle, HTU31D_COMMAND_RESET, NULL, 0);        /* soft reset */
     if (res != 0)                                                       /* check the result */
     {
-        handle->debug_print("htu31d: write failed.\n");                 /* write failed */
+        DRIVER_DEBUG_PRINT("htu31d: write failed.\n");                  /* write failed */
         
         return 1;                                                       /* return error */
     }
@@ -264,7 +277,7 @@ uint8_t htu31d_set_heater_on(htu31d_handle_t *handle)
     res = a_htu31d_write(handle, HTU31D_COMMAND_HEATER_ON, NULL, 0);        /* heater on */
     if (res != 0)                                                           /* check the result */
     {
-        handle->debug_print("htu31d: write failed.\n");                     /* write failed */
+        DRIVER_DEBUG_PRINT("htu31d: write failed.\n");                      /* write failed */
         
         return 1;                                                           /* return error */
     }
@@ -298,7 +311,7 @@ uint8_t htu31d_set_heater_off(htu31d_handle_t *handle)
     res = a_htu31d_write(handle, HTU31D_COMMAND_HEATER_OFF, NULL, 0);       /* heater off */
     if (res != 0)                                                           /* check the result */
     {
-        handle->debug_print("htu31d: write failed.\n");                     /* write failed */
+        DRIVER_DEBUG_PRINT("htu31d: write failed.\n");                      /* write failed */
         
         return 1;                                                           /* return error */
     }
@@ -335,13 +348,13 @@ uint8_t htu31d_get_serial_number(htu31d_handle_t *handle, uint8_t number[3])
     res = a_htu31d_read(handle, HTU31D_COMMAND_READ_SERIAL_NUMBER, buf, 4);        /* get serial number */
     if (res != 0)                                                                  /* check the result */
     {
-        handle->debug_print("htu31d: get serial number failed.\n");                /* get serial number failed */
+        DRIVER_DEBUG_PRINT("htu31d: get serial number failed.\n");                 /* get serial number failed */
         
         return 1;                                                                  /* return error */
     }
     if (a_htu31d_crc(buf, 3, buf[3]) != 0)                                         /* check the crc */
     {
-        handle->debug_print("htu31d: crc checked error.\n");                       /* crc checked error */
+        DRIVER_DEBUG_PRINT("htu31d: crc checked error.\n");                        /* crc checked error */
         
         return 4;                                                                  /* return error */
     }
@@ -379,13 +392,13 @@ uint8_t htu31d_get_diagnostic(htu31d_handle_t *handle, uint8_t *diagnostic)
     res = a_htu31d_read(handle, HTU31D_COMMAND_READ_DIAGNOSTIC, buf, 2);        /* get diagnostic */
     if (res != 0)                                                               /* check the result */
     {
-        handle->debug_print("htu31d: get diagnostic failed.\n");                /* get diagnostic failed */
+        DRIVER_DEBUG_PRINT("htu31d: get diagnostic failed.\n");                 /* get diagnostic failed */
         
         return 1;                                                               /* return error */
     }
     if (a_htu31d_crc(buf, 1, buf[1]) != 0)                                      /* check the crc */
     {
-        handle->debug_print("htu31d: crc checked error.\n");                    /* crc checked error */
+        DRIVER_DEBUG_PRINT("htu31d: crc checked error.\n");                     /* crc checked error */
         
         return 4;                                                               /* return error */
     }
@@ -434,7 +447,7 @@ uint8_t htu31d_read_temperature_humidity(htu31d_handle_t *handle,
     res = a_htu31d_write(handle, prev, NULL, 0);                            /* conversion */
     if (res != 0)                                                           /* check the result */
     {
-        handle->debug_print("htu31d: write failed.\n");                     /* write failed */
+        DRIVER_DEBUG_PRINT("htu31d: write failed.\n");                      /* write failed */
         
         return 1;                                                           /* return error */
     }
@@ -456,7 +469,7 @@ uint8_t htu31d_read_temperature_humidity(htu31d_handle_t *handle,
     }
     else
     {
-        handle->debug_print("htu31d: param is error.\n");                   /* param is error */
+        DRIVER_DEBUG_PRINT("htu31d: param is error.\n");                    /* param is error */
         
         return 5;                                                           /* return error */
     }
@@ -478,7 +491,7 @@ uint8_t htu31d_read_temperature_humidity(htu31d_handle_t *handle,
     }
     else
     {
-        handle->debug_print("htu31d: param is error.\n");                   /* param is error */
+        DRIVER_DEBUG_PRINT("htu31d: param is error.\n");                    /* param is error */
         
         return 5;                                                           /* return error */
     }
@@ -486,19 +499,19 @@ uint8_t htu31d_read_temperature_humidity(htu31d_handle_t *handle,
     res = a_htu31d_read(handle, HTU31D_COMMAND_READ_T_RH, buf, 6);          /* read t && rh */
     if (res != 0)                                                           /* check the result */
     {
-        handle->debug_print("htu31d: read t && rh failed.\n");              /* read t && rh failed */
+        DRIVER_DEBUG_PRINT("htu31d: read t && rh failed.\n");               /* read t && rh failed */
         
         return 1;                                                           /* return error */
     }
     if (a_htu31d_crc(buf, 2, buf[2]) != 0)                                  /* check the crc */
     {
-        handle->debug_print("htu31d: crc checked error.\n");                /* crc checked error */
+        DRIVER_DEBUG_PRINT("htu31d: crc checked error.\n");                 /* crc checked error */
         
         return 4;                                                           /* return error */
     }
     if (a_htu31d_crc(buf + 3, 2, buf[5]) != 0)                              /* check the crc */
     {
-        handle->debug_print("htu31d: crc checked error.\n");                /* crc checked error */
+        DRIVER_DEBUG_PRINT("htu31d: crc checked error.\n");                 /* crc checked error */
         
         return 4;                                                           /* return error */
     }
@@ -546,7 +559,7 @@ uint8_t htu31d_read_humidity(htu31d_handle_t *handle, uint16_t *humidity_raw, fl
     res = a_htu31d_write(handle, prev, NULL, 0);                            /* conversion */
     if (res != 0)                                                           /* check the result */
     {
-        handle->debug_print("htu31d: write failed.\n");                     /* write failed */
+        DRIVER_DEBUG_PRINT("htu31d: write failed.\n");                      /* write failed */
         
         return 1;                                                           /* return error */
     }
@@ -568,7 +581,7 @@ uint8_t htu31d_read_humidity(htu31d_handle_t *handle, uint16_t *humidity_raw, fl
     }
     else
     {
-        handle->debug_print("htu31d: param is error.\n");                   /* param is error */
+        DRIVER_DEBUG_PRINT("htu31d: param is error.\n");                    /* param is error */
         
         return 5;                                                           /* return error */
     }
@@ -590,7 +603,7 @@ uint8_t htu31d_read_humidity(htu31d_handle_t *handle, uint16_t *humidity_raw, fl
     }
     else
     {
-        handle->debug_print("htu31d: param is error.\n");                   /* param is error */
+        DRIVER_DEBUG_PRINT("htu31d: param is error.\n");                    /* param is error */
         
         return 5;                                                           /* return error */
     }
@@ -598,13 +611,13 @@ uint8_t htu31d_read_humidity(htu31d_handle_t *handle, uint16_t *humidity_raw, fl
     res = a_htu31d_read(handle, HTU31D_COMMAND_READ_RH, buf, 3);            /* read rh */
     if (res != 0)                                                           /* check the result */
     {
-        handle->debug_print("htu31d: read rh failed.\n");                   /* read rh failed */
+        DRIVER_DEBUG_PRINT("htu31d: read rh failed.\n");                    /* read rh failed */
         
         return 1;                                                           /* return error */
     }
     if (a_htu31d_crc(buf, 2, buf[2]) != 0)                                  /* check the crc */
     {
-        handle->debug_print("htu31d: crc checked error.\n");                /* crc checked error */
+        DRIVER_DEBUG_PRINT("htu31d: crc checked error.\n");                 /* crc checked error */
         
         return 4;                                                           /* return error */
     }
@@ -633,51 +646,53 @@ uint8_t htu31d_init(htu31d_handle_t *handle)
     {
         return 2;                                                       /* return error */
     }
+#ifdef DRIVER_HTU31D_WITH_DEBUG_PRINT
     if (handle->debug_print == NULL)                                    /* check debug_print */
     {
         return 3;                                                       /* return error */
     }
+#endif
     if (handle->iic_init == NULL)                                       /* check iic_init */
     {
-        handle->debug_print("htu31d: iic_init is null.\n");             /* iic_init is null */
+        DRIVER_DEBUG_PRINT("htu31d: iic_init is null.\n");              /* iic_init is null */
        
         return 3;                                                       /* return error */
     }
     if (handle->iic_deinit == NULL)                                     /* check iic_deinit */
     {
-        handle->debug_print("htu31d: iic_deinit is null.\n");           /* iic_deinit is null */
+        DRIVER_DEBUG_PRINT("htu31d: iic_deinit is null.\n");            /* iic_deinit is null */
        
         return 3;                                                       /* return error */
     }
     if (handle->iic_read == NULL)                                       /* check iic_read */
     {
-        handle->debug_print("htu31d: iic_read is null.\n");             /* iic_read is null */
+        DRIVER_DEBUG_PRINT("htu31d: iic_read is null.\n");              /* iic_read is null */
        
         return 3;                                                       /* return error */
     }
     if (handle->iic_write == NULL)                                      /* check iic_write */
     {
-        handle->debug_print("htu31d: iic_write is null.\n");            /* iic_write is null */
+        DRIVER_DEBUG_PRINT("htu31d: iic_write is null.\n");             /* iic_write is null */
        
         return 3;                                                       /* return error */
     }
     if (handle->delay_ms == NULL)                                       /* check delay_ms */
     {
-        handle->debug_print("htu31d: delay_ms is null.\n");             /* delay_ms is null */
+        DRIVER_DEBUG_PRINT("htu31d: delay_ms is null.\n");              /* delay_ms is null */
        
         return 3;                                                       /* return error */
     }
     
     if (handle->iic_init() != 0)                                        /* iic init */
     {
-        handle->debug_print("htu31d: iic init failed.\n");              /* iic init failed */
+        DRIVER_DEBUG_PRINT("htu31d: iic init failed.\n");               /* iic init failed */
        
         return 1;                                                       /* return error */
     }
     res = a_htu31d_write(handle, HTU31D_COMMAND_RESET, NULL, 0);        /* soft reset */
     if (res != 0)                                                       /* check the result */
     {
-        handle->debug_print("htu31d: soft reset failed.\n");            /* soft reset failed */
+        DRIVER_DEBUG_PRINT("htu31d: soft reset failed.\n");             /* soft reset failed */
         (void)handle->iic_deinit();                                     /* iic deinit */
         
         return 4;                                                       /* return error */
@@ -715,14 +730,14 @@ uint8_t htu31d_deinit(htu31d_handle_t *handle)
     res = a_htu31d_write(handle, HTU31D_COMMAND_RESET, NULL, 0);        /* soft reset */
     if (res != 0)                                                       /* check the result */
     {
-        handle->debug_print("htu31d: soft reset failed.\n");            /* soft reset failed */
+        DRIVER_DEBUG_PRINT("htu31d: soft reset failed.\n");             /* soft reset failed */
         
         return 4;                                                       /* return error */
     }
     handle->delay_ms(15);                                               /* delay 15 ms */
     if (handle->iic_deinit() != 0)                                      /* iic deinit */
     {
-        handle->debug_print("htu31d: iic deinit failed.\n");            /* iic deinit failed */
+        DRIVER_DEBUG_PRINT("htu31d: iic deinit failed.\n");             /* iic deinit failed */
        
         return 1;                                                       /* return error */
     }
