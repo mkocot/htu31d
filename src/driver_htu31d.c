@@ -518,8 +518,13 @@ uint8_t htu31d_read_temperature_humidity(htu31d_handle_t *handle,
     *temperature_raw = ((uint16_t)buf[0] << 8) | buf[1];                    /* set temperature raw */
     *humidity_raw = ((uint16_t)buf[3] << 8) | buf[4];                       /* set humidity raw */
     
+#ifdef DRIVER_HTU31D_WITH_FLOAT_OUTPUT
     *temperature_s = (float)(*temperature_raw) / 65535.0f * 165.0f - 40.0f; /* convert raw temperature */
     *humidity_s = (float)(*humidity_raw) / 65535.0f * 100.0f;               /* convert raw humidity */
+#else
+    (void)temperature_s;
+    (void)humidity_s;
+#endif
     
     return 0;                                                               /* success return 0 */
 }
@@ -622,7 +627,11 @@ uint8_t htu31d_read_humidity(htu31d_handle_t *handle, uint16_t *humidity_raw, fl
         return 4;                                                           /* return error */
     }
     *humidity_raw = ((uint16_t)buf[0] << 8) | buf[1];                       /* set humidity raw */
+#ifdef DRIVER_HTU31D_WITH_FLOAT_OUTPUT
     *humidity_s = (float)(*humidity_raw) / 65535.0f * 100.0f;               /* convert raw humidity */
+#else
+    (void)humidity_s;
+#endif
     
     return 0;                                                               /* success return 0 */
 }
