@@ -112,7 +112,7 @@ typedef struct htu31d_handle_s
     uint8_t (*iic_write)(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len);        /**< point to an iic_write function address */
     uint8_t (*iic_read)(uint8_t addr, uint8_t reg, uint8_t *buf, uint16_t len);         /**< point to an iic_read function address */
     void (*delay_ms)(uint32_t ms);                                                      /**< point to a delay_ms function address */
-#ifdef DRIVER_HTU31D_DEBUG_WITH_PRINT
+#ifdef DRIVER_HTU31D_WITH_DEBUG_PRINT
     void (*debug_print)(const char *const fmt, ...);                                    /**< point to a debug_print function address */
 #endif
     uint8_t iic_addr;                                                                   /**< iic address */
@@ -202,7 +202,7 @@ typedef struct htu31d_info_s
  * @param[in] FUC pointer to a debug_print function address
  * @note      none
  */
-#ifdef DRIVER_HTU31D_DEBUG_WITH_PRINT
+#ifdef DRIVER_HTU31D_WITH_DEBUG_PRINT
 #define DRIVER_HTU31D_LINK_DEBUG_PRINT(HANDLE, FUC)              (HANDLE)->debug_print = FUC
 #else
 #define DRIVER_HTU31D_LINK_DEBUG_PRINT(HANDLE, FUC)              ((void)0)

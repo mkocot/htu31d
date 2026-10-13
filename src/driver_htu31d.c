@@ -68,7 +68,7 @@
 #endif
 
 #ifdef DRIVER_HTU31D_WITH_DEBUG_PRINT
-#define DRIVER_DEBUG_PRINT(FMT) handle->debug_print(FMT, ##__VA_ARGS__)
+#define DRIVER_DEBUG_PRINT(FMT, ...) handle->debug_print(FMT, ##__VA_ARGS__)
 #else
 #define DRIVER_DEBUG_PRINT(FMT) ((void)0)
 #endif
@@ -495,7 +495,7 @@ uint8_t htu31d_read_temperature_humidity(htu31d_handle_t *handle,
         
         return 5;                                                           /* return error */
     }
-    
+
     res = a_htu31d_read(handle, HTU31D_COMMAND_READ_T_RH, buf, 6);          /* read t && rh */
     if (res != 0)                                                           /* check the result */
     {
