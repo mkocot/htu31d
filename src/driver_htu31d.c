@@ -246,7 +246,7 @@ uint8_t htu31d_soft_reset(htu31d_handle_t *handle)
         
         return 1;                                                       /* return error */
     }
-    handle->delay_ms(15);                                               /* delay 15 ms */
+    handle->delay_ms(20);                                               /* delay 20 ms, DS max 15 ms */
     
     return 0;                                                           /* success return 0 */
 }
@@ -465,7 +465,7 @@ uint8_t htu31d_read_temperature_humidity(htu31d_handle_t *handle,
     }
     else if (handle->humidity_osr == 3)                                     /* osr 3 */
     {
-        handle->delay_ms(9);                                                /* delay 9ms */
+        handle->delay_ms(12);                                               /* delay 12ms, typ 7.8 ms */
     }
     else
     {
@@ -483,11 +483,11 @@ uint8_t htu31d_read_temperature_humidity(htu31d_handle_t *handle,
     }
     else if (handle->temperature_osr == 2)                                  /* osr 2 */
     {
-        handle->delay_ms(7);                                                /* delay 7ms */
+        handle->delay_ms(9);                                                /* delay 9ms, typ 6.1 ms */
     }
     else if (handle->temperature_osr == 3)                                  /* osr 3 */
     {
-        handle->delay_ms(13);                                               /* delay 13ms */
+        handle->delay_ms(16);                                               /* delay 16ms, typ 12.1 ms */
     }
     else
     {
@@ -582,7 +582,7 @@ uint8_t htu31d_read_humidity(htu31d_handle_t *handle, uint16_t *humidity_raw, fl
     }
     else if (handle->humidity_osr == 3)                                     /* osr 3 */
     {
-        handle->delay_ms(9);                                                /* delay 9ms */
+        handle->delay_ms(12);                                               /* delay 12ms, typ 7.8 ms */
     }
     else
     {
@@ -600,11 +600,11 @@ uint8_t htu31d_read_humidity(htu31d_handle_t *handle, uint16_t *humidity_raw, fl
     }
     else if (handle->temperature_osr == 2)                                  /* osr 2 */
     {
-        handle->delay_ms(7);                                                /* delay 7ms */
+        handle->delay_ms(9);                                                /* delay 9ms, typ 6.1 ms */
     }
     else if (handle->temperature_osr == 3)                                  /* osr 3 */
     {
-        handle->delay_ms(13);                                               /* delay 13ms */
+        handle->delay_ms(16);                                               /* delay 16ms, typ 12.1 ms */
     }
     else
     {
@@ -706,7 +706,7 @@ uint8_t htu31d_init(htu31d_handle_t *handle)
         
         return 4;                                                       /* return error */
     }
-    handle->delay_ms(15);                                               /* delay 15 ms */
+    handle->delay_ms(20);                                               /* delay 20 ms, DS max 15 ms */
     handle->inited = 1;                                                 /* flag finish initialization */
     
     return 0;                                                           /* success return 0 */
@@ -743,7 +743,7 @@ uint8_t htu31d_deinit(htu31d_handle_t *handle)
         
         return 4;                                                       /* return error */
     }
-    handle->delay_ms(15);                                               /* delay 15 ms */
+    handle->delay_ms(20);                                               /* delay 20 ms, DS max 15 ms */
     if (handle->iic_deinit() != 0)                                      /* iic deinit */
     {
         DRIVER_DEBUG_PRINT("htu31d: iic deinit failed.\n");             /* iic deinit failed */
